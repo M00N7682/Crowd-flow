@@ -3,8 +3,13 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime, timedelta
 from urllib.parse import quote
-from config.loader import load_config
+
+import sys
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+print(sys.path)
+from project_config.loader import load_config
+
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0"
