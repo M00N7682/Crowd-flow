@@ -1,7 +1,7 @@
 import json
 from .schema import ClientConfig
 
-def load_config(path="config/client_config.json") -> ClientConfig:
+def load_config(path="project_config/config.json") -> ClientConfig:
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
     return ClientConfig(**data)
