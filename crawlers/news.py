@@ -12,10 +12,9 @@ from project_config.loader import load_config
 
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0"
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
-
-NAVER_SEARCH_URL = "https://search.naver.com/search.naver?where=news&query={query}&sort=1&start={start}&ds={start_date}&de={end_date}"
+NAVER_SEARCH_URL = "https://search.naver.com/search.naver?where=news&query={query}&sort=1&start={start}"
 
 def build_search_url(query, start_idx, start_date, end_date):
     return NAVER_SEARCH_URL.format(
@@ -88,5 +87,41 @@ def run_news_crawler():
         results = crawl_news_for_keyword(keyword, start_date, end_date)
         save_news_to_csv(results, keyword)
 
+def crawl_news_for_keyword(keyword, start_date, end_date, max_pages=1):
+    all_results = []
+
+    for page in range(1, max_pages + 1):
+        start_idx = (page - 1) * 10 + 1
+        url = build_search_url(keyword, start_idx, start_date, end_date)
+
+        print(f"\n🔍 Fetching page {page} for keyword: '{keyword}'")
+        print(f"🔗 URL: {url}")
+
+        response = requests.get(url, headers=HEADERS)
+        status = response.status_code
+        print(f"📡 Status code: {status}")
+
+        html = response.text
+        print("\n🔎 HTML 앞 1000자:")
+        print(html[:1000])  # ✅ html 변수로 따로 할당한 후 출력
+
+        soup = BeautifulSoup(html, "html.parser")
+        items = soup.select(".list_news > li")
+        print(f"🔍 Found {len(items)} <li> items")
+
+        page_results = parse_news_page(html)
+        print(f"✅ Parsed {len(page_results)} articles")
+
+        if not page_results:
+            print("⚠️ No articles parsed. Stopping further pages.")
+            break
+
+        all_results.extend(page_results)
+
+    return all_results
+
+
+
 if __name__ == "__main__":
     run_news_crawler()
+

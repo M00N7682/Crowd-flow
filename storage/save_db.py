@@ -10,7 +10,7 @@ import pandas as pd
 from datetime import datetime
 
 
-DB_PATH = "data/crowdflow.db"   # DB 파일 경로 (없으면 자동 생성)
+DB_PATH = "data/crowdflow.db"   
 TABLE_NAME = "news_articles"
 
 
@@ -62,7 +62,6 @@ def insert_news_from_csv(csv_path: str, keyword: str = ""):
             ))
             inserted += 1
         except sqlite3.IntegrityError:
-            # URL 중복 → 무시
             skipped += 1
 
     conn.commit()

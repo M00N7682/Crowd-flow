@@ -13,9 +13,7 @@ import pandas as pd
 from dateutil.parser import parse as date_parse
 
 
-# ───────────────────────────────────────────────
 # 1) 텍스트 정제 함수
-# ───────────────────────────────────────────────
 EMOJI_PATTERN = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
 HTML_TAG_PATTERN = re.compile(r"<.*?>")
 MULTI_SPACE_PATTERN = re.compile(r"\s+")
@@ -32,9 +30,7 @@ def clean_text(text: str) -> str:
     return text
 
 
-# ───────────────────────────────────────────────
 # 2) 날짜 표준화 함수
-# ───────────────────────────────────────────────
 def _from_relative_expression(expr: str) -> Optional[datetime]:
     """
     '1일 전', '3시간 전' 같은 상대 시간을 datetime 객체로 변환.
@@ -73,9 +69,7 @@ def normalize_date(raw: str) -> str:
         return raw  # 변환 실패 시 원본 유지
 
 
-# ───────────────────────────────────────────────
 # 3) 중복 제거 함수
-# ───────────────────────────────────────────────
 def deduplicate(df: pd.DataFrame) -> pd.DataFrame:
     """title + url 조합으로 중복 제거."""
     before = len(df)
@@ -85,9 +79,7 @@ def deduplicate(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# ───────────────────────────────────────────────
 # 4) CSV 단위 전체 파이프라인
-# ───────────────────────────────────────────────
 def preprocess_news_csv(csv_path: str, save: bool = True) -> pd.DataFrame:
     """
     ➀ CSV 로드 → ➁ 텍스트 정제 → ➂ 날짜 표준화 → ➃ 중복 제거
@@ -125,9 +117,7 @@ def preprocess_news_csv(csv_path: str, save: bool = True) -> pd.DataFrame:
     return df
 
 
-# ───────────────────────────────────────────────
-# 5) 스크립트 단독 실행 예시
-# ───────────────────────────────────────────────
+# 5) 스크립트 단독 실행 
 if __name__ == "__main__":
     import argparse
 
