@@ -10,7 +10,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 print(sys.path)
 from project_config.loader import load_config
 
-
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
@@ -86,40 +85,6 @@ def run_news_crawler():
         print(f"[*] Crawling news for keyword: '{keyword}'")
         results = crawl_news_for_keyword(keyword, start_date, end_date)
         save_news_to_csv(results, keyword)
-
-def crawl_news_for_keyword(keyword, start_date, end_date, max_pages=1):
-    all_results = []
-
-    for page in range(1, max_pages + 1):
-        start_idx = (page - 1) * 10 + 1
-        url = build_search_url(keyword, start_idx, start_date, end_date)
-
-        print(f"\n🔍 Fetching page {page} for keyword: '{keyword}'")
-        print(f"🔗 URL: {url}")
-
-        response = requests.get(url, headers=HEADERS)
-        status = response.status_code
-        print(f"📡 Status code: {status}")
-
-        html = response.text
-        print("\n🔎 HTML 앞 1000자:")
-        print(html[:1000])  # ✅ html 변수로 따로 할당한 후 출력
-
-        soup = BeautifulSoup(html, "html.parser")
-        items = soup.select(".list_news > li")
-        print(f"🔍 Found {len(items)} <li> items")
-
-        page_results = parse_news_page(html)
-        print(f"✅ Parsed {len(page_results)} articles")
-
-        if not page_results:
-            print("⚠️ No articles parsed. Stopping further pages.")
-            break
-
-        all_results.extend(page_results)
-
-    return all_results
-
 
 
 if __name__ == "__main__":
