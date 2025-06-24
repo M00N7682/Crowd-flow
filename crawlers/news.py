@@ -66,7 +66,7 @@ def crawl_news_for_keyword(keyword, start_date, end_date, max_pages=5):
             break
 
         all_results.extend(page_results)
-        time.sleep(1)  # Naver 차단 방지
+        time.sleep(1)  
 
     return all_results
 
